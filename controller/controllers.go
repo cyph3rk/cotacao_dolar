@@ -33,7 +33,7 @@ func PegaCotacao(w http.ResponseWriter, r *http.Request) {
 		}
 
 		resposta := map[string]string{
-			"cotacao": cotacao.Bid,
+			"dolar": cotacao.Bid,
 		}
 
 		jsonResposta, err := json.Marshal(resposta)
