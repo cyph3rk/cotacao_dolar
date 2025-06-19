@@ -5,7 +5,6 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
-	"io"
 	"net/http"
 	"time"
 
@@ -14,11 +13,8 @@ import (
 )
 
 func PegaCotacao(ctx context.Context) (models.Cotacao, error) {
-
-	ctx, cancel := context.WithTimeout(ctx, 200*time.Millisecond)
-	defer cancel()
-
-	req, err := http.NewRequestWithContext(ctx, "GET", "https://economia.awesomeapi.com.br/json/last/USD-BRL", nil)
+	url := "https://economia.awesomeapi.com.br/json/last/USD-BRL"
+	req, err := http.NewRequestWithContext(ctx, "GET", url, nil)
 	if err != nil {
 		return models.Cotacao{}, fmt.Errorf("erro ao criar requisição: %w", err)
 	}
@@ -32,17 +28,12 @@ func PegaCotacao(ctx context.Context) (models.Cotacao, error) {
 	}
 	defer resp.Body.Close()
 
-	body, err := io.ReadAll(resp.Body)
-	if err != nil {
-		return models.Cotacao{}, fmt.Errorf("erro ao ler resposta: %w", err)
-	}
-
 	var c models.Cotacao
-	if err := json.Unmarshal(body, &c); err != nil {
+	if err := json.NewDecoder(resp.Body).Decode(&c); err != nil {
 		return models.Cotacao{}, fmt.Errorf("erro ao decodificar JSON: %w", err)
 	}
 
-	dbCtx, cancel := context.WithTimeout(ctx, 20*time.Millisecond)
+	dbCtx, cancel := context.WithTimeout(ctx, 10*time.Millisecond)
 	defer cancel()
 	if err := database.DB.WithContext(dbCtx).Create(&c).Error; err != nil {
 		return models.Cotacao{}, fmt.Errorf("erro ao salvar no banco: %w", err)
