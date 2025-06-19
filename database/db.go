@@ -20,5 +20,5 @@ func ConectaComBancoDeDados() {
 	if err != nil {
 		log.Panic("Erro ao conectar com banco de dados")
 	}
-	DB.AutoMigrate(&models.Cotacao{}) // gera a tabela aluno automaticamente se ela nao existe
+	DB.AutoMigrate(&models.Cotacao{})
 }
