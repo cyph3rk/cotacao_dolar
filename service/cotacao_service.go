@@ -14,6 +14,8 @@ import (
 
 func PegaCotacao(ctx context.Context) (models.Cotacao, error) {
 	url := "https://economia.awesomeapi.com.br/json/last/USD-BRL"
+
+	ctx, cancel := context.WithTimeout(ctx, 200*time.Millisecond)
 	req, err := http.NewRequestWithContext(ctx, "GET", url, nil)
 	if err != nil {
 		return models.Cotacao{}, fmt.Errorf("erro ao criar requisição: %w", err)
