@@ -1,0 +1,9 @@
+{
+  "timeouts": {
+    "cotacao_dolar": "200ms",
+    "grava_bd": "10ms"
+  },
+  "server": {
+    "port": ":8080"
+  }
+}
