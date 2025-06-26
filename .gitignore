@@ -74,3 +74,4 @@ gorm.db
 
 # End of https://www.gitignore.io/api/visualstudiocode
 
+gorm.db
